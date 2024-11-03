@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CompanyValidator {
+export default class PersonValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,9 +24,10 @@ export default class CompanyValidator {
    *    ```
    */
   public schema = schema.create({
-     NIT: schema.number([
-      rules.range(10000000, 999999999),  // Asegura que el NIT tenga exactamente 9 dígitos
-      rules.required(),                   // Asegura que el NIT es obligatorio
+    email: schema.string({}, [
+      rules.email(),          // Asegura que el formato del email sea válido
+      rules.required(),       // Asegura que el email es obligatorio
+      rules.regex(/@/)        // Verifica que contenga un '@'
     ]),
   })
 
@@ -42,7 +43,8 @@ export default class CompanyValidator {
    *
    */
   public messages: CustomMessages = {
-    'nit.required': 'El NIT es obligatorio.',
-    'nit.range': 'El NIT debe tener exactamente 9 dígitos numéricos.',
+    'email.required': 'El email es obligatorio.',
+    'email.email': 'El formato del email no es válido.',
+    'email.regex': 'El email debe contener un "@"',
   }
 }
