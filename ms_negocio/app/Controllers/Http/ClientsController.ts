@@ -1,20 +1,20 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Company from 'App/Models/Company';
+import Client from 'App/Models/Client';
 
-export default class CompaniesController {
+export default class ClientsController {
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
-            let theCompany: Company = await Company.findOrFail(params.id)
-            await theCompany.load("person")
-            return theCompany;
+            let theClient: Client = await Client.findOrFail(params.id)
+            await theClient.load("contracts")
+            return theClient;
         } else {
             const data = request.all()
             if ("page" in data && "per_page" in data) {
                 const page = request.input('page', 1);
                 const perPage = request.input("per_page", 20);
-                return await Company.query().paginate(page, perPage)
+                return await Client.query().paginate(page, perPage)
             } else {
-                return await Company.query()
+                return await Client.query()
             }
 
         }
@@ -22,21 +22,21 @@ export default class CompaniesController {
     }
     public async create({ request }: HttpContextContract) {
         const body = request.body();
-        const theCompany: Company = await Company.create(body);
-        return theCompany;
+        const theClient: Client = await Client.create(body);
+        return theClient;
     }
 
     public async update({ params, request }: HttpContextContract) {
-        const theCompany: Company = await Company.findOrFail(params.id);
+        const theClient: Client = await Client.findOrFail(params.id);
         const body = request.body();
-        theCompany.NIT = body.NIT;
-        theCompany.person_id = body.person_id;
-        return await theCompany.save();
+        theClient.name = body.name;
+        theClient.email = body.email;
+        return await theClient.save();
     }
 
     public async delete({ params, response }: HttpContextContract) {
-        const theCompany: Company = await Company.findOrFail(params.id);
+        const theClient: Client = await Client.findOrFail(params.id);
             response.status(204);
-            return await theCompany.delete();
+            return await theClient.delete();
     }
 }

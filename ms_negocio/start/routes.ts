@@ -26,4 +26,6 @@ Route.get('/', async () => {
 
 import "./routes/company"
 import "./routes/person"
+import "./routes/client"
+import "./routes/contract"
 

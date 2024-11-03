@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class PersonValidator {
+export default class ContractValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,14 +24,14 @@ export default class PersonValidator {
    *    ```
    */
   public schema = schema.create({
-    name: schema.string({}, [
-      rules.alpha(),          // Asegura que el nombre solo contenga letras
-      rules.required(),       // Asegura que el nombre es obligatorio
+    date: schema.date({}, [
+      rules.required(),       // Asegura que la fecha de contrato es obligatoria
     ]),
-    email: schema.string({}, [
-      rules.email(),          // Asegura que el formato del email sea válido
-      rules.required(),       // Asegura que el email es obligatorio
-      rules.regex(/@/)        // Verifica que contenga un '@'
+    value: schema.number([
+      rules.required(),       // Asegura que el valor del contrato es obligatorio
+    ]),
+    client_id: schema.number([
+      rules.required(),       // Asegura que el id del cliente es obligatorio
     ]),
   })
 
@@ -47,10 +47,8 @@ export default class PersonValidator {
    *
    */
   public messages: CustomMessages = {
-    'email.required': 'El email es obligatorio.',
-    'email.email': 'El formato del email no es válido.',
-    'email.regex': 'El email debe contener un "@"',
-    'name.required': 'El nombre es obligatorio.',
-    'name.alpha': 'El nombre solo debe contener letras.',
+    'date.required': 'La fecha del contrato es obligatoria.',
+    'value.required': 'El valor del contrato es obligatorio.',
+    'client_id.required': 'El id del cliente es obligatorio.',
   }
 }

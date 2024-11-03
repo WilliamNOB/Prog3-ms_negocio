@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import Company from './Company'
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import Contract from './Contract'
 
-export default class Person extends BaseModel {
+export default class Client extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
@@ -18,8 +18,9 @@ export default class Person extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @belongsTo(() => Company, {
-    foreignKey: 'person_id', // Clave foránea en la tabla perfiles
+  @hasMany(() => Contract,{
+    //nombre de la clave foránea que permite la relación
+    foreignKey: 'client_id'
   })
-  public company: BelongsTo<typeof Company>
+  public contracts: HasMany<typeof Contract>
 }
