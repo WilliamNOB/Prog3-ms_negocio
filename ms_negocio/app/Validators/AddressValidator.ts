@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class ClientValidator {
+export default class AddressValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,13 +24,18 @@ export default class ClientValidator {
    *    ```
    */
   public schema = schema.create({
-    name: schema.string({}, [
-      rules.alpha(),          // Asegura que el nombre solo contenga letras
-      rules.required(),       // Asegura que el nombre es obligatorio
+    street: schema.string({ trim: true }, [
+      rules.required(),
+      rules.maxLength(255),
     ]),
-    email: schema.string({}, [
-      rules.email(),          // Asegura que el formato del email sea válido
-      rules.required(),       // Asegura que el email es obligatorio
+    
+    reference: schema.string.optional({ trim: true }, [
+      rules.maxLength(500),
+    ]),
+
+    municipality_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'municipalities', column: 'id' }), // Verifica que el municipio exista
     ]),
   })
 
@@ -46,9 +51,12 @@ export default class ClientValidator {
    *
    */
   public messages: CustomMessages = {
-    'email.required': 'El email es obligatorio.',
-    'email.email': 'El formato del email no es válido.',
-    'name.required': 'El nombre es obligatorio.',
-    'name.alpha': 'El nombre solo debe contener letras.',
+    'street.required': 'La calle es un campo obligatorio',
+    'street.maxLength': 'La calle no debe exceder los 255 caracteres',
+
+    'reference.maxLength': 'La referencia no debe exceder los 500 caracteres',
+
+    'municipality_id.required': 'El municipio es obligatorio',
+    'municipality_id.exists': 'El municipio especificado no existe',
   }
 }

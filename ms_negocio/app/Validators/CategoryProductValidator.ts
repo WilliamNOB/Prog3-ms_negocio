@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class CategoryProductValidator {
@@ -23,7 +23,16 @@ export default class CategoryProductValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    caategory_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'categories', column: 'id' }), // Verifica que el municipio exista
+    ]),
+    product_id: schema.number([
+      rules.required(),
+      rules.exists({ table: 'products', column: 'id' }), // Verifica que el municipio exista
+    ]),
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -36,5 +45,11 @@ export default class CategoryProductValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'category_id.required': 'La categoria es obligatoria',
+    'category_id.exists': 'La categoria especificada no existe',
+    
+    'product_id.required': 'El producto es obligatorio',
+    'product_id.exists': 'El producto especificado no existe',
+  }
 }

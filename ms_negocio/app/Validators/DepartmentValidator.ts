@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class ClientValidator {
+export default class DepartmentValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,13 +24,9 @@ export default class ClientValidator {
    *    ```
    */
   public schema = schema.create({
-    name: schema.string({}, [
-      rules.alpha(),          // Asegura que el nombre solo contenga letras
-      rules.required(),       // Asegura que el nombre es obligatorio
-    ]),
-    email: schema.string({}, [
-      rules.email(),          // Asegura que el formato del email sea válido
-      rules.required(),       // Asegura que el email es obligatorio
+    name: schema.string({ trim: true }, [
+      rules.required(),
+      rules.maxLength(255),
     ]),
   })
 
@@ -46,9 +42,7 @@ export default class ClientValidator {
    *
    */
   public messages: CustomMessages = {
-    'email.required': 'El email es obligatorio.',
-    'email.email': 'El formato del email no es válido.',
-    'name.required': 'El nombre es obligatorio.',
-    'name.alpha': 'El nombre solo debe contener letras.',
+    'name.required': 'El nombre es un campo obligatorio',
+    'name.maxLength': 'El nombre no debe exceder los 255 caracteres',
   }
 }
