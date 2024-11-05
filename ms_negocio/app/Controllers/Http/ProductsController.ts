@@ -6,6 +6,7 @@ export default class ProductsController {
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let theProduct: Product = await Product.findOrFail(params.id)
+            await theProduct.load("client")
             return theProduct;
         } else {
             const data = request.all()
@@ -23,6 +24,7 @@ export default class ProductsController {
     public async create({ request }: HttpContextContract) {
         const body = request.body();
         const theProduct: Product = await Product.create(body);
+        await theProduct.load("client")
         return theProduct;
     }
 
@@ -32,7 +34,8 @@ export default class ProductsController {
         theProduct.name = body.name;
         theProduct.description = body.description;
         theProduct.price = body.price;
-        theProduct.stock = body.stock
+        theProduct.stock = body.stock;
+        theProduct.client_id = body.client_id;
         return await theProduct.save();
     }
 

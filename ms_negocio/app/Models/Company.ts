@@ -19,7 +19,7 @@ export default class Company extends BaseModel {
   public updatedAt: DateTime
 
   @hasOne(() => Person, {
-    foreignKey: 'person_id', // Clave foránea en la tabla person
+    foreignKey: 'company_id', // Clave foránea en la tabla person
   })
   public person: HasOne<typeof Person>
 }

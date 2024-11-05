@@ -19,7 +19,7 @@ export default class Person extends BaseModel {
   public updatedAt: DateTime
 
   @belongsTo(() => Company, {
-    foreignKey: 'person_id', // Clave foránea en la tabla perfiles
+    foreignKey: 'company_id', // Clave foránea en la tabla perfiles
   })
   public company: BelongsTo<typeof Company>
 }

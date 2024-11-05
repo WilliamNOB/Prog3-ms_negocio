@@ -29,4 +29,5 @@ import "./routes/person"
 import "./routes/client"
 import "./routes/contract"
 import "./routes/product"
-
+import "./routes/category"
+import "./routes/categoryProduct"

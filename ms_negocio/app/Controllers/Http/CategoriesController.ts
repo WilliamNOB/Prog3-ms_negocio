@@ -1,21 +1,20 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Client from 'App/Models/Client';
 
-export default class ClientsController {
+import Category from "App/Models/Category";
+
+export default class CategoriesController {
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
-            let theClient: Client = await Client.findOrFail(params.id)
-            await theClient.load("contracts")
-            await theClient.load("products")
-            return theClient;
+            let theCategory: Category = await Category.findOrFail(params.id)
+            return theCategory;
         } else {
             const data = request.all()
             if ("page" in data && "per_page" in data) {
                 const page = request.input('page', 1);
                 const perPage = request.input("per_page", 20);
-                return await Client.query().paginate(page, perPage)
+                return await Category.query().paginate(page, perPage)
             } else {
-                return await Client.query()
+                return await Category.query()
             }
 
         }
@@ -23,21 +22,21 @@ export default class ClientsController {
     }
     public async create({ request }: HttpContextContract) {
         const body = request.body();
-        const theClient: Client = await Client.create(body);
-        return theClient;
+        const theCategory: Category = await Category.create(body);
+        return theCategory;
     }
 
     public async update({ params, request }: HttpContextContract) {
-        const theClient: Client = await Client.findOrFail(params.id);
+        const theCategory: Category = await Category.findOrFail(params.id);
         const body = request.body();
-        theClient.name = body.name;
-        theClient.email = body.email;
-        return await theClient.save();
+        theCategory.name = body.name;
+        theCategory.description = body.description;
+        return await theCategory.save();
     }
 
     public async delete({ params, response }: HttpContextContract) {
-        const theClient: Client = await Client.findOrFail(params.id);
+        const theCategory: Category = await Category.findOrFail(params.id);
             response.status(204);
-            return await theClient.delete();
+            return await theCategory.delete();
     }
 }

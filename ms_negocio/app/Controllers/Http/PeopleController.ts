@@ -5,6 +5,7 @@ export default class PeopleController {
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let thePerson: Person = await Person.findOrFail(params.id)
+            await thePerson.load("company")
             return thePerson;
         } else {
             const data = request.all()
