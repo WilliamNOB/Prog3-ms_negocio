@@ -1,29 +1,42 @@
-import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import Municipality from './Municipality'
+import { DateTime } from "luxon";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasMany,
+  hasMany,
+} from "@ioc:Adonis/Lucid/Orm";
+import Municipality from "./Municipality";
+import Route from "./Route";
 
 export default class Address extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public street: string
+  public street: string;
 
   @column()
-  public reference: string
+  public reference: string;
 
   @column()
-  public municipality_id: number
+  public municipality_id: number;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 
-  @belongsTo(() => Municipality,{
+  @belongsTo(() => Municipality, {
     //Nombre de la clave foránea de la entidad dominante
-    foreignKey: 'municipality_id'
-    })
-    public municipality: BelongsTo<typeof Municipality>
+    foreignKey: "municipality_id",
+  })
+  public municipality: BelongsTo<typeof Municipality>;
+
+  @hasMany(() => Route, {
+    foreignKey: "address_id",
+  })
+  public routes: HasMany<typeof Route>;
 }

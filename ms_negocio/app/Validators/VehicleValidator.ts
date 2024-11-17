@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from "@ioc:Adonis/Core/Validator";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
-export default class AddressValidator {
+export default class VehicleValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,19 +24,17 @@ export default class AddressValidator {
    *    ```
    */
   public schema = schema.create({
-    street: schema.string({ trim: true }, [
+    make: schema.string({}, [rules.required()]),
+    model: schema.string({}, [rules.required()]),
+    year: schema.number([
       rules.required(),
-      rules.maxLength(255),
+      rules.range(1886, new Date().getFullYear()),
     ]),
-
-    reference: schema.string.optional({ trim: true }, [rules.maxLength(500)]),
-
-    municipality_id: schema.number([
+    licensePlate: schema.string({}, [
       rules.required(),
-      rules.exists({ table: "municipalities", column: "id" }), // Verifica que el municipio exista
+      rules.unique({ table: "vehicles", column: "license_plate" }),
     ]),
   });
-
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
    * for targeting nested fields and array expressions `(*)` for targeting all
@@ -49,12 +47,11 @@ export default class AddressValidator {
    *
    */
   public messages: CustomMessages = {
-    "street.required": "La calle es un campo obligatorio",
-    "street.maxLength": "La calle no debe exceder los 255 caracteres",
-
-    "reference.maxLength": "La referencia no debe exceder los 500 caracteres",
-
-    "municipality_id.required": "El municipio es obligatorio",
-    "municipality_id.exists": "El municipio especificado no existe",
+    "make.required": "Make is required",
+    "model.required": "Model is required",
+    "year.required": "Year is required",
+    "year.range": "Year must be between 1886 and the current year",
+    "licensePlate.required": "License plate is required",
+    "licensePlate.unique": "License plate is already in use",
   };
 }

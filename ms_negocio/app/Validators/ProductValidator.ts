@@ -1,5 +1,5 @@
-import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema, CustomMessages, rules } from "@ioc:Adonis/Core/Validator";
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
 export default class ProductValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -26,11 +26,11 @@ export default class ProductValidator {
   public schema = schema.create({
     name: schema.string({ trim: true }, [
       rules.required(),
-      rules.maxLength(255),   // El nombre no debe exceder los 255 caracteres
+      rules.maxLength(255), // El nombre no debe exceder los 255 caracteres
     ]),
 
     description: schema.string.optional({ trim: true }, [
-      rules.maxLength(500),   // La descripción puede tener hasta 500 caracteres
+      rules.maxLength(500), // La descripción puede tener hasta 500 caracteres
     ]),
 
     price: schema.number([
@@ -40,10 +40,12 @@ export default class ProductValidator {
 
     stock: schema.number([
       rules.required(),
-      rules.unsigned(),   // Stock debe ser un número positivo
+      rules.unsigned(), // Stock debe ser un número positivo
       rules.range(0, 100000), // Stock no debe exceder los 100,000 unidades
     ]),
-  })
+
+    batch_id: schema.number([rules.required(), rules.unsigned()]),
+  });
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -57,16 +59,18 @@ export default class ProductValidator {
    *
    */
   public messages: CustomMessages = {
-    'name.required': 'El nombre del producto es obligatorio',
-    'name.maxLength': 'El nombre del producto no debe exceder los 255 caracteres',
-    
-    'description.maxLength': 'La descripción no debe exceder los 500 caracteres',
+    "name.required": "El nombre del producto es obligatorio",
+    "name.maxLength":
+      "El nombre del producto no debe exceder los 255 caracteres",
 
-    'price.required': 'El precio del producto es obligatorio',
-    'price.range': 'El precio debe ser un valor entre 0 y 999999.99',
+    "description.maxLength":
+      "La descripción no debe exceder los 500 caracteres",
 
-    'stock.required': 'El stock del producto es obligatorio',
-    'stock.unsigned': 'El stock debe ser un número positivo',
-    'stock.range': 'El stock debe estar entre 0 y 100,000 unidades',
-  }
+    "price.required": "El precio del producto es obligatorio",
+    "price.range": "El precio debe ser un valor entre 0 y 999999.99",
+
+    "stock.required": "El stock del producto es obligatorio",
+    "stock.unsigned": "El stock debe ser un número positivo",
+    "stock.range": "El stock debe estar entre 0 y 100,000 unidades",
+  };
 }

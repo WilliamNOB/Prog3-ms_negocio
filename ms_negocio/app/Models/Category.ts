@@ -1,25 +1,52 @@
-import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import CategoryProduct from './CategoryProduct'
+import { DateTime } from "luxon";
+import {
+  BaseModel,
+  column,
+  ManyToMany,
+  manyToMany,
+} from "@ioc:Adonis/Lucid/Orm";
+import Product from "./Product";
 
 export default class Category extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public name: string
+  public name: string;
 
   @column()
-  public description: string
+  public description: string;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 
-  @belongsTo(() => CategoryProduct, {
-    foreignKey: 'categoryProduct_id', // Clave foránea
+  @manyToMany(() => Product, {
+    pivotTable: "category_products",
+    localKey: "id",
+    pivotForeignKey: "category_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "product_id",
   })
-  public categoryProduct: BelongsTo<typeof CategoryProduct>
+  public products: ManyToMany<typeof Product>;
+
+  @manyToMany(() => Category, {
+    pivotTable: "category_subcategories",
+    localKey: "id",
+    pivotForeignKey: "category_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "subcategory_id",
+  })
+  public subcategories: ManyToMany<typeof Category>;
+
+  @manyToMany(() => Category, {
+    pivotTable: "category_subcategories",
+    localKey: "id",
+    pivotForeignKey: "subcategory_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "category_id",
+  })
+  public parentCategories: ManyToMany<typeof Category>;
 }

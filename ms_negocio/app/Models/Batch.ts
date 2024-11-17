@@ -7,21 +7,18 @@ import {
   HasMany,
   hasMany,
 } from "@ioc:Adonis/Lucid/Orm";
-import Client from "./Client";
+import Product from "./Product";
 import Route from "./Route";
 
-export default class Contract extends BaseModel {
+export default class Batch extends BaseModel {
   @column({ isPrimary: true })
   public id: number;
 
   @column()
-  public date: DateTime;
+  public name: string;
 
   @column()
-  public value: number;
-
-  @column()
-  public client_id: number;
+  public routeId: number;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
@@ -29,14 +26,13 @@ export default class Contract extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
 
-  @belongsTo(() => Client, {
-    //Nombre de la clave foránea de la entidad dominante
-    foreignKey: "client_id",
+  @hasMany(() => Product, {
+    foreignKey: "batchId",
   })
-  public client: BelongsTo<typeof Client>;
+  public products: HasMany<typeof Product>;
 
-  @hasMany(() => Route, {
-    foreignKey: "contract_id",
+  @belongsTo(() => Route, {
+    foreignKey: "routeId",
   })
-  public routes: HasMany<typeof Route>;
+  public route: BelongsTo<typeof Route>;
 }

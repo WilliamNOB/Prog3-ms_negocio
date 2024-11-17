@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from "@ioc:Adonis/Core/Validator";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
-export default class AddressValidator {
+export default class InvoiceValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,19 +24,16 @@ export default class AddressValidator {
    *    ```
    */
   public schema = schema.create({
-    street: schema.string({ trim: true }, [
+    amount: schema.number([rules.required()]),
+    quotaId: schema.number([
       rules.required(),
-      rules.maxLength(255),
+      rules.exists({ table: "quotas", column: "id" }),
     ]),
-
-    reference: schema.string.optional({ trim: true }, [rules.maxLength(500)]),
-
-    municipality_id: schema.number([
+    costId: schema.number([
       rules.required(),
-      rules.exists({ table: "municipalities", column: "id" }), // Verifica que el municipio exista
+      rules.exists({ table: "costs", column: "id" }),
     ]),
   });
-
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
    * for targeting nested fields and array expressions `(*)` for targeting all
@@ -49,12 +46,10 @@ export default class AddressValidator {
    *
    */
   public messages: CustomMessages = {
-    "street.required": "La calle es un campo obligatorio",
-    "street.maxLength": "La calle no debe exceder los 255 caracteres",
-
-    "reference.maxLength": "La referencia no debe exceder los 500 caracteres",
-
-    "municipality_id.required": "El municipio es obligatorio",
-    "municipality_id.exists": "El municipio especificado no existe",
+    "amount.required": "The amount field is required.",
+    "quotaId.required": "The quotaId field is required.",
+    "quotaId.exists": "The quotaId must exist in the quotas table.",
+    "costId.required": "The costId field is required.",
+    "costId.exists": "The costId must exist in the costs table.",
   };
 }

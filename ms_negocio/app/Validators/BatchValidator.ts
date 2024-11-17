@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from "@ioc:Adonis/Core/Validator";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
-export default class AddressValidator {
+export default class BatchValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,16 +24,10 @@ export default class AddressValidator {
    *    ```
    */
   public schema = schema.create({
-    street: schema.string({ trim: true }, [
+    name: schema.string({}, [rules.required()]),
+    routeId: schema.number([
       rules.required(),
-      rules.maxLength(255),
-    ]),
-
-    reference: schema.string.optional({ trim: true }, [rules.maxLength(500)]),
-
-    municipality_id: schema.number([
-      rules.required(),
-      rules.exists({ table: "municipalities", column: "id" }), // Verifica que el municipio exista
+      rules.exists({ table: "routes", column: "id" }),
     ]),
   });
 
@@ -49,12 +43,8 @@ export default class AddressValidator {
    *
    */
   public messages: CustomMessages = {
-    "street.required": "La calle es un campo obligatorio",
-    "street.maxLength": "La calle no debe exceder los 255 caracteres",
-
-    "reference.maxLength": "La referencia no debe exceder los 500 caracteres",
-
-    "municipality_id.required": "El municipio es obligatorio",
-    "municipality_id.exists": "El municipio especificado no existe",
+    "name.required": "The name field is required.",
+    "routeId.required": "The routeId field is required.",
+    "routeId.exists": "The routeId must exist in the routes table.",
   };
 }

@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from "@ioc:Adonis/Core/Validator";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
-export default class AddressValidator {
+export default class CostValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,19 +24,17 @@ export default class AddressValidator {
    *    ```
    */
   public schema = schema.create({
-    street: schema.string({ trim: true }, [
+    description: schema.string({}, [rules.required()]),
+    amount: schema.number([rules.required()]),
+    invoiceId: schema.number([
       rules.required(),
-      rules.maxLength(255),
+      rules.exists({ table: "invoices", column: "id" }),
     ]),
-
-    reference: schema.string.optional({ trim: true }, [rules.maxLength(500)]),
-
-    municipality_id: schema.number([
+    ownerId: schema.number([
       rules.required(),
-      rules.exists({ table: "municipalities", column: "id" }), // Verifica que el municipio exista
+      rules.exists({ table: "owners", column: "id" }),
     ]),
   });
-
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
    * for targeting nested fields and array expressions `(*)` for targeting all
@@ -49,12 +47,11 @@ export default class AddressValidator {
    *
    */
   public messages: CustomMessages = {
-    "street.required": "La calle es un campo obligatorio",
-    "street.maxLength": "La calle no debe exceder los 255 caracteres",
-
-    "reference.maxLength": "La referencia no debe exceder los 500 caracteres",
-
-    "municipality_id.required": "El municipio es obligatorio",
-    "municipality_id.exists": "El municipio especificado no existe",
+    "description.required": "The description field is required.",
+    "amount.required": "The amount field is required.",
+    "invoiceId.required": "The invoiceId field is required.",
+    "invoiceId.exists": "The invoiceId must exist in the invoices table.",
+    "ownerId.required": "The ownerId field is required.",
+    "ownerId.exists": "The ownerId must exist in the owners table.",
   };
 }
