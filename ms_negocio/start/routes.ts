@@ -48,3 +48,4 @@ import "./routes/vehicleOwner";
 import "./routes/vehicleDriver";
 import "./routes/driver";
 import "./routes/shift";
+import "./routes/service";
