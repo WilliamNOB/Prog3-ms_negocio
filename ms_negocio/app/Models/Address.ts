@@ -6,6 +6,8 @@ import {
   column,
   HasMany,
   hasMany,
+  manyToMany,
+  ManyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
 import Municipality from "./Municipality";
 import Route from "./Route";
@@ -35,8 +37,12 @@ export default class Address extends BaseModel {
   })
   public municipality: BelongsTo<typeof Municipality>;
 
-  @hasMany(() => Route, {
-    foreignKey: "address_id",
+  @manyToMany(() => Route, {
+    pivotTable: "address_routes",
+    localKey: "id",
+    pivotForeignKey: "address_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "route_id",
   })
-  public routes: HasMany<typeof Route>;
+  public routes: ManyToMany<typeof Route>;
 }

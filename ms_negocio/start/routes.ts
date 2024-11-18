@@ -49,4 +49,7 @@ import "./routes/vehicleDriver";
 import "./routes/driver";
 import "./routes/shift";
 import "./routes/service";
+import "./routes/restaurant";
+import "./routes/hotel";
 import "./routes/admin";
+import "./routes/addressRoute";
