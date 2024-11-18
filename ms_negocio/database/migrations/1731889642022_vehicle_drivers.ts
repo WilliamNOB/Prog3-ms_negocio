@@ -1,7 +1,7 @@
 import BaseSchema from "@ioc:Adonis/Lucid/Schema";
 
 export default class extends BaseSchema {
-  protected tableName = "users";
+  protected tableName = "vehicle_drivers";
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
@@ -10,10 +10,18 @@ export default class extends BaseSchema {
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.string("username", 255).notNullable().unique();
-      table.string("email", 255).notNullable().unique();
-      table.string("password", 180).notNullable();
-      table.string("remember_me_token").nullable();
+      table
+        .integer("driver_id")
+        .unsigned()
+        .references("id")
+        .inTable("drivers")
+        .onDelete("CASCADE");
+      table
+        .integer("vehicle_id")
+        .unsigned()
+        .references("id")
+        .inTable("vehicles")
+        .onDelete("CASCADE");
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });
     });

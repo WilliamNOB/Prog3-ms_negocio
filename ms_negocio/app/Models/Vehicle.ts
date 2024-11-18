@@ -10,6 +10,8 @@ import {
 import Insurance from "./Insurance";
 import Municipality from "./Municipality";
 import Route from "./Route";
+import Contract from "./Contract";
+import Owner from "./Owner";
 
 export default class Vehicle extends BaseModel {
   @column({ isPrimary: true })
@@ -33,7 +35,9 @@ export default class Vehicle extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
 
-  @hasMany(() => Insurance)
+  @hasMany(() => Insurance, {
+    foreignKey: "vehicleId",
+  })
   public insurances: HasMany<typeof Insurance>;
 
   @manyToMany(() => Municipality, {
@@ -45,8 +49,30 @@ export default class Vehicle extends BaseModel {
   })
   public municipalities: ManyToMany<typeof Municipality>;
 
-  @hasMany(() => Route, {
-    foreignKey: "vehicle_id",
+  @manyToMany(() => Contract, {
+    pivotTable: "routes",
+    localKey: "id",
+    pivotForeignKey: "vehicle_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "contract_id",
   })
-  public routes: HasMany<typeof Route>;
+  public contracts: ManyToMany<typeof Contract>;
+
+  @manyToMany(() => Owner, {
+    pivotTable: "vehicle_owners",
+    localKey: "id",
+    pivotForeignKey: "vehicle_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "owner_id",
+  })
+  public owners: ManyToMany<typeof Owner>;
+
+  /*@manyToMany(() => Driver, {
+    pivotTable: 'vehicle_drivers',
+    localKey: 'id',
+    pivotForeignKey: 'vehicle_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'driver_id',
+  })
+  public drivers: ManyToMany<typeof Driver> */
 }
