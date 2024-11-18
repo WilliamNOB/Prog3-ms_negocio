@@ -2,10 +2,13 @@ import { DateTime } from "luxon";
 import {
   BaseModel,
   column,
+  hasMany,
+  HasMany,
   manyToMany,
   ManyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
 import Vehicle from "./Vehicle";
+import Shift from "./Shift";
 
 export default class Driver extends BaseModel {
   @column({ isPrimary: true })
@@ -31,4 +34,9 @@ export default class Driver extends BaseModel {
     pivotRelatedForeignKey: "vehicle_id",
   })
   public vehicles: ManyToMany<typeof Vehicle>;
+
+  @hasMany(() => Shift, {
+    foreignKey: "driverId",
+  })
+  public shifts: HasMany<typeof Shift>;
 }

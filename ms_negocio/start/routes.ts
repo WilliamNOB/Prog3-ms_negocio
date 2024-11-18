@@ -47,3 +47,4 @@ import "./routes/owner";
 import "./routes/vehicleOwner";
 import "./routes/vehicleDriver";
 import "./routes/driver";
+import "./routes/shift";
