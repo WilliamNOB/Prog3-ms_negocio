@@ -44,3 +44,6 @@ import "./routes/quota";
 import "./routes/invoice";
 import "./routes/cost";
 import "./routes/owner";
+import "./routes/vehicleOwner";
+import "./routes/vehicleDriver";
+import "./routes/driver";
