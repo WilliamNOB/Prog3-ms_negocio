@@ -9,6 +9,7 @@ import {
 } from "@ioc:Adonis/Lucid/Orm";
 import Vehicle from "./Vehicle";
 import Shift from "./Shift";
+import Cost from "./Cost";
 
 export default class Driver extends BaseModel {
   @column({ isPrimary: true })
@@ -19,6 +20,9 @@ export default class Driver extends BaseModel {
 
   @column()
   public licenseNumber: string;
+
+  @column()
+  public email: string;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
@@ -39,4 +43,9 @@ export default class Driver extends BaseModel {
     foreignKey: "driverId",
   })
   public shifts: HasMany<typeof Shift>;
+
+  @hasMany(() => Cost, {
+    foreignKey: "driverId",
+  })
+  public costs: HasMany<typeof Cost>;
 }
