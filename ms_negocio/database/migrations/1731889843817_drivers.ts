@@ -12,6 +12,7 @@ export default class extends BaseSchema {
        */
       table.string("name").notNullable();
       table.string("license_number").notNullable().unique();
+      table.string("email").notNullable().unique();
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });
     });
