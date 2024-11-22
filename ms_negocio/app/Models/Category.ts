@@ -1,7 +1,11 @@
 import { DateTime } from "luxon";
 import {
   BaseModel,
+  belongsTo,
+  BelongsTo,
   column,
+  hasMany,
+  HasMany,
   ManyToMany,
   manyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
@@ -16,6 +20,9 @@ export default class Category extends BaseModel {
 
   @column()
   public description: string;
+
+  @column()
+  public parentId: number | null;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
@@ -32,21 +39,13 @@ export default class Category extends BaseModel {
   })
   public products: ManyToMany<typeof Product>;
 
-  @manyToMany(() => Category, {
-    pivotTable: "category_subcategories",
-    localKey: "id",
-    pivotForeignKey: "category_id",
-    relatedKey: "id",
-    pivotRelatedForeignKey: "subcategory_id",
+  @hasMany(() => Category, {
+    foreignKey: "parentId",
   })
-  public subcategories: ManyToMany<typeof Category>;
+  public subcategories: HasMany<typeof Category>;
 
-  @manyToMany(() => Category, {
-    pivotTable: "category_subcategories",
-    localKey: "id",
-    pivotForeignKey: "subcategory_id",
-    relatedKey: "id",
-    pivotRelatedForeignKey: "category_id",
+  @belongsTo(() => Category, {
+    foreignKey: "parentId",
   })
-  public parentCategories: ManyToMany<typeof Category>;
+  public parentCategory: BelongsTo<typeof Category>;
 }
