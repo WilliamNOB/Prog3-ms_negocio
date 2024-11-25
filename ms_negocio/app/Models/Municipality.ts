@@ -13,6 +13,7 @@ import Department from "./Department";
 import Address from "./Address";
 import DistributionCenter from "./DistributionCenter";
 import Vehicle from "./Vehicle";
+import Restriction from "./Restriction";
 
 export default class Municipality extends BaseModel {
   @column({ isPrimary: true })
@@ -53,4 +54,9 @@ export default class Municipality extends BaseModel {
     pivotRelatedForeignKey: "vehicle_id",
   })
   public vehicles: ManyToMany<typeof Vehicle>;
+
+  @hasMany(() => Restriction, {
+    foreignKey: "municipalityId",
+  })
+  public restrictions: HasMany<typeof Restriction>;
 }
