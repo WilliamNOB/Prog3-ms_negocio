@@ -53,3 +53,4 @@ import "./routes/restaurant";
 import "./routes/hotel";
 import "./routes/admin";
 import "./routes/addressRoute";
+import "./routes/restriction";
